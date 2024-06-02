@@ -1,4 +1,5 @@
 use std::env;
+use std::ffi::OsString;
 use std::path::{Path, PathBuf};
 
 pub fn find_on_path<P>(keyword: P) -> Option<PathBuf>
@@ -18,4 +19,11 @@ where
             })
             .next()
     })
+}
+
+pub fn home() -> String {
+    env::var_os("HOME")
+        .unwrap_or(OsString::from("/"))
+        .into_string()
+        .unwrap_or("".to_string())
 }

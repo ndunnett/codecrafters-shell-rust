@@ -1,3 +1,4 @@
+use std::env;
 use std::process;
 
 use crate::system;
@@ -9,6 +10,7 @@ pub fn get_builtin(keyword: &str) -> BuiltinOption {
         "cd" => cd,
         "echo" => echo,
         "exit" => exit,
+        "pwd" => pwd,
         "type" => type_,
         _ => return None,
     };
@@ -16,8 +18,20 @@ pub fn get_builtin(keyword: &str) -> BuiltinOption {
     Some(Box::new(f))
 }
 
-pub fn cd(_args: Vec<&str>) -> Result<(), String> {
-    unimplemented!()
+pub fn cd(args: Vec<&str>) -> Result<(), String> {
+    let path = args.first().map_or_else(system::home, |&s| {
+        if s.starts_with('~') {
+            s.replacen('~', &system::home(), 1)
+        } else {
+            s.into()
+        }
+    });
+
+    if env::set_current_dir(&path).is_err() {
+        Err(format!("{path}: No such file or directory"))
+    } else {
+        Ok(())
+    }
 }
 
 pub fn echo(args: Vec<&str>) -> Result<(), String> {
@@ -32,6 +46,15 @@ pub fn exit(args: Vec<&str>) -> Result<(), String> {
         .unwrap_or(0);
 
     process::exit(exit_code);
+}
+
+pub fn pwd(_args: Vec<&str>) -> Result<(), String> {
+    if let Ok(path) = env::current_dir() {
+        println!("{}", path.display());
+        Ok(())
+    } else {
+        Err("failed to read current directory".into())
+    }
 }
 
 pub fn type_(args: Vec<&str>) -> Result<(), String> {
