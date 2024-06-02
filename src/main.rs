@@ -10,4 +10,13 @@ fn main() {
     let stdin = io::stdin();
     let mut input = String::new();
     stdin.read_line(&mut input).unwrap();
+
+    let mut parts = input.split_whitespace();
+
+    match parts.next() {
+        Some("cd") => unimplemented!(),
+        Some("echo") => unimplemented!(),
+        Some(keyword) => eprintln!("{keyword}: command not found"),
+        None => (),
+    }
 }

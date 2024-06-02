@@ -6,11 +6,15 @@ RUN set -eux; \
     apt-get update; \
     apt-get upgrade -y; \
     apt-get install -y --no-install-recommends \
-        ca-certificates gcc libc6-dev pkg-config libssl-dev wget git zsh; \
+        ca-certificates gcc libc6-dev pkg-config libssl-dev wget curl git zsh; \
     apt-get clean -y; \
     apt-get autoclean -y; \
     apt-get autoremove -y; \
     rm -rf /var/lib/apt/lists/*
+
+# install codecrafters cli
+RUN set -eux; \
+    wget -qO - https://codecrafters.io/install.sh | sh
 
 # create user
 ARG USERNAME=dev
