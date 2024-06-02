@@ -1,5 +1,7 @@
 use std::process;
 
+use crate::system;
+
 type BuiltinOption = Option<Box<dyn Fn(Vec<&str>) -> Result<(), String>>>;
 
 pub fn get_builtin(keyword: &str) -> BuiltinOption {
@@ -37,6 +39,8 @@ pub fn type_(args: Vec<&str>) -> Result<(), String> {
 
     if get_builtin(keyword).is_some() {
         println!("{keyword} is a shell builtin");
+    } else if let Some(path) = system::find_on_path(keyword) {
+        println!("{keyword} is {}", path.display());
     } else {
         println!("{keyword} not found");
     }

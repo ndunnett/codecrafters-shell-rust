@@ -2,6 +2,7 @@
 use std::io::{self, Write};
 
 mod builtin;
+mod system;
 
 fn main() {
     loop {
