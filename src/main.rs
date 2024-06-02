@@ -12,16 +12,12 @@ fn main() {
         io::stdin().read_line(&mut input).unwrap();
         let mut parts = input.split_whitespace();
 
-        let result = match parts.next() {
-            Some("cd") => unimplemented!(),
-            Some("echo") => builtin::echo(parts.collect()),
-            Some("exit") => builtin::exit(parts.collect()),
-            Some(keyword) => Err(format!("{keyword}: command not found")),
-            None => Ok(()),
-        };
-
-        if let Err(e) = result {
-            eprintln!("{}", e);
+        if let Some(keyword) = parts.next() {
+            if let Some(f) = builtin::get_builtin(keyword) {
+                let _ = f(parts.collect());
+            } else {
+                eprintln!("{keyword}: command not found");
+            }
         }
     }
 }
