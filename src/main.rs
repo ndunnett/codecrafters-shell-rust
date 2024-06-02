@@ -1,6 +1,7 @@
 #[allow(unused_imports)]
 use std::io::{self, Write};
-use std::process::exit;
+
+mod builtin;
 
 fn main() {
     loop {
@@ -13,13 +14,8 @@ fn main() {
 
         let result = match parts.next() {
             Some("cd") => unimplemented!(),
-            Some("echo") => unimplemented!(),
-            Some("exit") => exit(
-                parts
-                    .next()
-                    .map(|arg| arg.parse::<i32>().unwrap_or(0))
-                    .unwrap_or(0),
-            ),
+            Some("echo") => builtin::echo(parts.collect()),
+            Some("exit") => builtin::exit(parts.collect()),
             Some(keyword) => Err(format!("{keyword}: command not found")),
             None => Ok(()),
         };
